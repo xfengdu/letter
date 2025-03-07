@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字母大小写转换游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+        #question {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #007bff;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1.2rem;
+            width: 80%;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        #feedback {
+            font-size: 1.2rem;
+            margin-top: 15px;
+        }
+        .correct {
+            color: #28a745;
+        }
+        .incorrect {
+            color: #dc3545;
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+            #question {
+                font-size: 1.5rem;
+            }
+            input[type="text"] {
+                width: 100%;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>请书写（<span id="question"></span>）中字母对应的大小写</h1>
+        <input type="text" id="answer" maxlength="1" autocomplete="off">
+        <div id="feedback"></div>
+    </div>
+
+    <script>
+        let targetLetter = '';
+
+        function generateRandomLetter() {
+            const letters = 'abcdefghijklmnopqrstuvwxyz';
+            const randomIndex = Math.floor(Math.random() * 26);
+            const randomLetter = letters[randomIndex];
+            
+            // 随机决定显示大写或小写
+            if (Math.random() > 0.5) {
+                targetLetter = randomLetter.toUpperCase();
+            } else {
+                targetLetter = randomLetter;
+            }
+            
+            document.getElementById('question').textContent = targetLetter;
+            document.getElementById('answer').value = '';
+            document.getElementById('feedback').textContent = '';
+        }
+
+        function checkInput() {
+            const userInput = document.getElementById('answer').value.trim();
+            const feedback = document.getElementById('feedback');
+            
+            // 验证输入是否为字母
+            if (!/^[a-zA-Z]$/.test(userInput)) {
+                feedback.textContent = '× 只能输入字母，请重新填写';
+                feedback.className = 'incorrect';
+                return;
+            }
+
+            const correctAnswer = targetLetter === targetLetter.toUpperCase() 
+                ? targetLetter.toLowerCase() 
+                : targetLetter.toUpperCase();
+
+            if (userInput.toLowerCase() === correctAnswer.toLowerCase()) {
+                feedback.textContent = '√ 您的输入正确，您太棒啦！';
+                feedback.className = 'correct';
+                setTimeout(generateRandomLetter, 1000); // 1秒后生成新题目
+            } else {
+                feedback.textContent = '× 您的输入错误，请重新填写';
+                feedback.className = 'incorrect';
+            }
+        }
+
+        // 初始化
+        generateRandomLetter();
+        document.getElementById('answer').addEventListener('input', checkInput);
+    </script>
+</body>
+</html>
